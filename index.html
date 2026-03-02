@@ -44,3 +44,377 @@
     <script src="games/pichkari.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holi Festival Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background -->
+    <canvas id="backgroundCanvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <h1>🎨 Utkarsh's Holi Festival 2026 🔥</h1>
+    </header>
+
+    <!-- Play Button -->
+    <main>
+        <button id="playButton">Play Holi Now 🎉</button>
+    </main>
+
+    <!-- Game Containers -->
+    <section id="gameZone" style="display:none;">
+        <!-- Color Splash Game -->
+        <div id="colorSplashGame" class="gameContainer">
+            <canvas id="colorSplashCanvas"></canvas>
+        </div>
+
+        <!-- Pichkari Game -->
+        <div id="pichkariGame" class="gameContainer" style="display:none;">
+            <canvas id="pichkariCanvas"></canvas>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Holi Vibes by Utkarsh 😎 | Made with ❤️</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="games/color-splash.js"></script>
+    <script src="games/pichkari.js"></script>
+</body>
+</html>
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Background Gradient */
+body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+/* Gradient Animation */
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* Header */
+header {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 6px #000;
+    font-size: 2rem;
+}
+
+/* Play Button */
+#playButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ff5f6d;
+    color: #fff;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.5rem;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+#playButton:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.5);
+}
+
+/* Game Zone */
+#gameZone {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Canvas Fullscreen */
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+// DOM Elements
+const playBtn = document.getElementById('playButton');
+const gameZone = document.getElementById('gameZone');
+const colorGame = document.getElementById('colorSplashGame');
+const pichkariGame = document.getElementById('pichkariGame');
+
+// Play Button Click
+playBtn.addEventListener('click', () => {
+    playBtn.style.display = 'none';
+    gameZone.style.display = 'block';
+    colorGame.style.display = 'block';
+    pichkariGame.style.display = 'none'; // Pichkari initially hidden
+});
+
+// Example: Switch between games after 60 sec (demo)
+setTimeout(() => {
+    colorGame.style.display = 'none';
+    pichkariGame.style.display = 'block';
+}, 60000);
+
+// Background Powder / Confetti Example (Simple)
+const bgCanvas = document.getElementById('backgroundCanvas');
+const bgCtx = bgCanvas.getContext('2d');
+bgCanvas.width = window.innerWidth;
+bgCanvas.height = window.innerHeight;
+
+const particles = [];
+for(let i=0;i<100;i++){
+    particles.push({
+        x: Math.random()*bgCanvas.width,
+        y: Math.random()*bgCanvas.height,
+        radius: Math.random()*3 + 2,
+        color: `hsl(${Math.random()*360}, 80%, 60%)`,
+        speedY: Math.random()*1 + 0.5
+    });
+}
+
+function animateBG(){
+    bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+    particles.forEach(p=>{
+        p.y += p.speedY;
+        if(p.y>bgCanvas.height) p.y=0;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        bgCtx.fillStyle = p.color;
+        bgCtx.fill();
+    });
+    requestAnimationFrame(animateBG);
+}
+animateBG();
+
+// Resize Canvas on Window Resize
+window.addEventListener('resize', ()=>{
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+});
+    // Color Splash Game Canvas
+const canvas = document.getElementById('colorSplashCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Splash Particles
+let splashes = [];
+let confetti = [];
+
+// Random Colors
+const colors = ['#FF5733','#FFBD33','#75FF33','#33FFBD','#3375FF','#BD33FF','#FF33A8'];
+
+// Click Event
+canvas.addEventListener('click', (e)=>{
+    createSplash(e.clientX, e.clientY);
+});
+
+// Splash Function
+function createSplash(x,y){
+    // Main Splash Circle
+    splashes.push({
+        x: x,
+        y: y,
+        radius: Math.random()*20 + 20,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        alpha: 1,
+        shrink: 0.02
+    });
+
+    // Particle Burst
+    for(let i=0;i<15;i++){
+        confetti.push({
+            x: x,
+            y: y,
+            radius: Math.random()*5 + 2,
+            color: colors[Math.floor(Math.random()*colors.length)],
+            speedX: (Math.random()-0.5)*5,
+            speedY: (Math.random()-0.5)*5,
+            alpha:1
+        });
+    }
+
+    // Optional: Screen Shake (small)
+    shakeScreen();
+}
+
+// Screen Shake
+let shakeAmt = 0;
+function shakeScreen(){
+    shakeAmt = 5;
+}
+
+// Animate Splash
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Draw splashes
+    splashes.forEach((s,i)=>{
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI*2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = s.alpha;
+        ctx.fill();
+        s.radius -= s.shrink;
+        s.alpha -= 0.01;
+        if(s.radius <=0) splashes.splice(i,1);
+    });
+
+    // Draw confetti
+    confetti.forEach((c,i)=>{
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.radius, 0, Math.PI*2);
+        ctx.fillStyle = c.color;
+        ctx.globalAlpha = c.alpha;
+        ctx.fill();
+        c.x += c.speedX;
+        c.y += c.speedY;
+        c.alpha -= 0.02;
+        if(c.alpha <=0) confetti.splice(i,1);
+    });
+
+    ctx.globalAlpha = 1;
+
+    // Apply screen shake
+    if(shakeAmt >0){
+        const dx = Math.random()*shakeAmt - shakeAmt/2;
+        const dy = Math.random()*shakeAmt - shakeAmt/2;
+        canvas.style.transform = `translate(${dx}px, ${dy}px)`;
+        shakeAmt -=0.5;
+    } else {
+        canvas.style.transform = 'translate(0,0)';
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// Resize Canvas on Window Resize
+window.addEventListener('resize', ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+            // Pichkari Power Shot Game
+
+// Initialize Matter.js
+const { Engine, Render, Runner, Bodies, Composite, Body } = Matter;
+
+const engine = Engine.create();
+const world = engine.world;
+
+// Canvas
+const canvas = document.getElementById('pichkariCanvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const render = Render.create({
+    canvas: canvas,
+    engine: engine,
+    options: {
+        wireframes: false,
+        background: 'transparent'
+    }
+});
+Render.run(render);
+Runner.run(Runner.create(), engine);
+
+// Ground (invisible, for droplets)
+const ground = Bodies.rectangle(window.innerWidth/2, window.innerHeight+50, window.innerWidth, 100, { isStatic:true });
+Composite.add(world, ground);
+
+// Target (moving balloon)
+const target = Bodies.circle(800, window.innerHeight/2, 30, { 
+    isStatic:false, 
+    render:{ fillStyle:'#FF33A8' } 
+});
+Composite.add(world, target);
+
+// Move target horizontally
+let dir = 2;
+Matter.Events.on(engine, 'beforeUpdate', ()=>{
+    Body.translate(target, { x: dir, y: 0 });
+    if(target.position.x > window.innerWidth-50 || target.position.x < 50) dir *= -1;
+});
+
+// Water droplets array
+let droplets = [];
+
+// Mouse / Touch Hold Logic
+let isHolding = false;
+let holdStart = 0;
+        # 🎨 Holi Festival Game 2026
+
+Welcome to **Utkarsh's Holi Festival Game**!  
+Experience the colors, fun, and excitement of Holi right in your browser with interactive games.  
+
+---
+
+## 🔥 Features
+
+### 1. Color Splash Challenge
+- Click to splash colors on moving avatars.
+- Realistic powder effect with particle bursts.
+- Screen shake on perfect hits.
+- Combo system and colorful confetti effects.
+
+### 2. Pichkari Power Shot
+- Hold to increase water pressure.
+- Release to shoot water in realistic arc motion (gravity applied).
+- Droplets break on impact with splash particles.
+- Moving target challenge for maximum fun.
+
+### 3. Holi Reaction Game
+- Scenario-based choices with interactive animations.
+- Funny character reactions based on your choice.
+- Perfect for adding cute and playful Holi vibes.
+
+### 4. Bollywood Holi Guess Game
+- Guess popular Holi songs from short audio clips.
+- Correct guesses trigger a full-screen color blast animation.
+- Examples:  
+  - [Rang Barse](https://www.youtube.com/watch?v=c2XK1R9k5Mk)  
+  - [Balam Pichkari](https://www.youtube.com/watch?v=DHj2F4RAGPA)  
+  - [Do Me a Favor, Let’s Play Holi](https://www.youtube.com/watch?v=x1dqU68rJ0Q)
+
+---
+
+## 💻 How to Run Locally
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/holi-festival-game.git
+        
