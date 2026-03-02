@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holi Festival Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background -->
+    <canvas id="backgroundCanvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <h1>🎨 Utkarsh's Holi Festival 2026 🔥</h1>
+    </header>
+
+    <!-- Play Button -->
+    <main>
+        <button id="playButton">Play Holi Now 🎉</button>
+    </main>
+
+    <!-- Game Containers -->
+    <section id="gameZone" style="display:none;">
+        <!-- Color Splash Game -->
+        <div id="colorSplashGame" class="gameContainer">
+            <canvas id="colorSplashCanvas"></canvas>
+        </div>
+
+        <!-- Pichkari Game -->
+        <div id="pichkariGame" class="gameContainer" style="display:none;">
+            <canvas id="pichkariCanvas"></canvas>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Holi Vibes by Utkarsh 😎 | Made with ❤️</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="games/color-splash.js"></script>
+    <script src="games/pichkari.js"></script>
+</body>
+</html>
